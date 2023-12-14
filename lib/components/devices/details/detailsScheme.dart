@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:wattkeeperr/components/devices/details/chartConsumoDiario.dart';
+import 'package:wattkeeperr/components/devices/details/chartConsumoDiarioH.dart';
+import 'package:wattkeeperr/components/devices/details/chartMedicionTiempoReal.dart';
 import 'package:wattkeeperr/components/devices/details/generalInfo.dart';
 import 'package:wattkeeperr/components/devices/details/historialConsumo.dart';
 import 'package:wattkeeperr/components/devices/details/limits.dart';
@@ -54,7 +56,7 @@ class _DeviceDetailsSchemeState extends State<DeviceDetailsScheme> {
   String tiempoTranscurrido = "";
   String ultimaMedicion = "";
   List<Medicion> mediciones = [];
-  List<MedicionGrafico> medicionesGrafico = [];
+  List<MedicionGrafico> medicionesBarChart = [];
   TextEditingController descripcionController = TextEditingController();
   String formattedDate(String dateTimeString) {
     DateTime? dateTime = DateTime.tryParse(dateTimeString);
@@ -80,7 +82,9 @@ class _DeviceDetailsSchemeState extends State<DeviceDetailsScheme> {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
-    if (difference.inSeconds < 60) {
+    if (difference.inSeconds < 0) {
+      return "Justo Ahora";
+    } else if (difference.inSeconds < 60) {
       return "Hace ${difference.inSeconds} segundos";
     } else if (difference.inMinutes < 60) {
       return "Hace ${difference.inMinutes} minutos";
@@ -116,8 +120,13 @@ class _DeviceDetailsSchemeState extends State<DeviceDetailsScheme> {
         calculateTimeDifference(widget.fechaMedicion.toString());
     mediciones = await controller.getMedicionesDevice(
         widget.token, widget.deviceDetails.id);
-    medicionesGrafico = await controller.getMedicionesGraficoDevice(
+
+    medicionesBarChart = await controller.getMedicionesGraficoDevice(
         widget.token, widget.deviceDetails.id);
+    print("Mediciones array: $mediciones");
+    print("Mediciones array: $medicionesBarChart");
+    print(
+        "Id del dispositivo que se hayaron las mediciones: ${widget.deviceDetails.id}");
     setState(() {
       loading = false;
     });
@@ -141,12 +150,12 @@ class _DeviceDetailsSchemeState extends State<DeviceDetailsScheme> {
       final data = jsonDecode(message);
       Medicion medicion =
           Medicion.fromJson(data["data"] as Map<String, dynamic>);
-      
+
       setState(() {
         consumo = consumo + data["data"]["watts"];
         amperaje = data["data"]["amperaje"];
         voltaje = data["data"]["voltaje"];
-        
+
         ultimaMedicion =
             formattedDate(data["data"]["fecha_medicion"]).toString();
         tiempoTranscurrido =
@@ -154,7 +163,7 @@ class _DeviceDetailsSchemeState extends State<DeviceDetailsScheme> {
         mediciones.add(medicion);
         String fechaMedicion =
             "${convertDateFormat(data["data"]["fecha_medicion"])} 00:00:00.000";
-        for (var medicion in medicionesGrafico) {
+        for (var medicion in medicionesBarChart) {
           if (medicion.fechaDia.toString() == fechaMedicion) {
             print("coincidencia");
             medicion.consumo = medicion.consumo +
@@ -162,7 +171,7 @@ class _DeviceDetailsSchemeState extends State<DeviceDetailsScheme> {
             break; // Salir del bucle una vez que se encuentra la coincidencia
           }
         }
-        medicionesGrafico = List.from(medicionesGrafico);
+        medicionesBarChart = List.from(medicionesBarChart);
       });
     });
   }
@@ -188,56 +197,122 @@ class _DeviceDetailsSchemeState extends State<DeviceDetailsScheme> {
                     height: 10,
                   ),
                   Text(
-                    'Descripción',
-                    style: Theme.of(context).textTheme.labelMedium,
+                    'Informacion',
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  TextFieldCustom(
-                    hintText: 'Introduce una descripción',
-                    labelText: 'Descripción',
-                    controller: descripcionController,
-                    icon: Icons.description,
-                    onChanged: (value) {
-                      setState(() {
-                        widget.setEditable();
-                      });
-                      widget.addForm("descripcion", descripcionController.text);
-                    },
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Descripción',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        TextFieldCustom(
+                          hintText: 'Introduce una descripción',
+                          labelText: 'Descripción',
+                          controller: descripcionController,
+                          icon: Icons.description,
+                          onChanged: (value) {
+                            setState(() {
+                              widget.setEditable();
+                            });
+                            widget.addForm(
+                                "descripcion", descripcionController.text);
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'Informacion General',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        GeneralInfoDeviceDetails(
+                            amperaje: amperaje,
+                            voltaje: voltaje,
+                            acumuladoWatts: consumo,
+                            ultimaMedicion: ultimaMedicion,
+                            tiempoTranscurrido: tiempoTranscurrido),
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   Text(
-                    'Limitación',
-                    style: Theme.of(context).textTheme.labelMedium,
+                    "Sistema de Ahorro",
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  LimitsDeviceDetails(
-                    addLimitation: widget.addLimitation,
-                    deviceDetails: widget.deviceDetails,
-                    setEditable: widget.setEditable,
-                    enabled: widget.deviceDetails.enabled,
-                    addForm: widget.addForm,
-                    removeForm: widget.removeForm,
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Limitación',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        LimitsDeviceDetails(
+                          addLimitation: widget.addLimitation,
+                          deviceDetails: widget.deviceDetails,
+                          setEditable: widget.setEditable,
+                          enabled: widget.deviceDetails.enabled,
+                          addForm: widget.addForm,
+                          removeForm: widget.removeForm,
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   Text(
-                    'Informacion General',
-                    style: Theme.of(context).textTheme.labelMedium,
+                    'Gráficos',
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  GeneralInfoDeviceDetails(
-                      amperaje: amperaje,
-                      voltaje: voltaje,
-                      acumuladoWatts: consumo,
-                      ultimaMedicion: ultimaMedicion,
-                      tiempoTranscurrido: tiempoTranscurrido),
+                  Divider(),
+                  if (mediciones.isNotEmpty && medicionesBarChart.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Consumo en Tiempo Real',
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          ChartMedicionTiempoReal(mediciones: mediciones),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            'Consumo Diario',
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          ChartConsumoDiarioH(mediciones: medicionesBarChart),
+                          SizedBox(
+                            height: 5,
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    Text("No hay mediciones"),
                   const SizedBox(
                     height: 20,
                   ),
                   Text(
                     'Historial de Consumo',
-                    style: Theme.of(context).textTheme.labelMedium,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
+                  Divider(),
                   HistorialConsumoDispositivo(
                     mediciones: mediciones,
                     id: widget.deviceDetails.id,
@@ -245,13 +320,6 @@ class _DeviceDetailsSchemeState extends State<DeviceDetailsScheme> {
                   ),
                   SizedBox(
                     height: 20,
-                  ),
-                  Text(
-                    'Consumo Diario',
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                  ChartConsumoDiario(
-                    mediciones: medicionesGrafico,
                   ),
                 ],
               ),

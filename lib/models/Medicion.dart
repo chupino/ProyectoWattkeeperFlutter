@@ -6,8 +6,7 @@ class Medicion {
   final DateTime? fechaMedicion;
 
   Medicion(
-      {
-      required this.id,
+      {required this.id,
       required this.direccionMac,
       required this.acumuladoWatts,
       required this.voltaje,
@@ -32,6 +31,15 @@ class Medicion {
       return '';
     }
   }
+
+  String getFormatedDate2() {
+    if (fechaMedicion != null) {
+      return DateFormat('HH:mm', 'es').format(fechaMedicion!);
+    } else {
+      return '';
+    }
+  }
+
 
   factory Medicion.fromJson(Map<String, dynamic> data) {
     return Medicion(

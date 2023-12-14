@@ -53,7 +53,7 @@ class GeneralInfoDeviceDetails extends StatelessWidget {
             ),
             Text('Consumo Total'),
             Text(
-              "${acumuladoWatts / 1000}kW",
+              "${(acumuladoWatts / 1000).toStringAsFixed(3)}kW",
               style: Theme.of(context)
                   .textTheme
                   .headlineMedium!
@@ -64,7 +64,7 @@ class GeneralInfoDeviceDetails extends StatelessWidget {
             ),
             Text('Último Voltaje'),
             Text(
-              "${voltaje}V",
+              "${(voltaje).toStringAsFixed(3)}V",
               style: Theme.of(context)
                   .textTheme
                   .headlineMedium!
@@ -75,7 +75,7 @@ class GeneralInfoDeviceDetails extends StatelessWidget {
             ),
             Text('Último Amperaje'),
             Text(
-              "${amperaje}A",
+              "${(amperaje).toStringAsFixed(3)}A",
               style: Theme.of(context)
                   .textTheme
                   .headlineMedium!

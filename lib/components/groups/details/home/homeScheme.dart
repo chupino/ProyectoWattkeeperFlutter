@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:wattkeeperr/components/devices/details/chartMedicionTiempoReal.dart';
 import 'package:wattkeeperr/components/groups/details/home/consumoGrupoCard.dart';
 import 'package:wattkeeperr/components/groups/details/home/historialConsumoGrupo.dart';
 import 'package:wattkeeperr/components/groups/details/home/resumenCard.dart';
@@ -28,7 +29,8 @@ class HomeGroupScheme extends StatefulWidget {
 
 class _HomeGroupSchemeState extends State<HomeGroupScheme> {
   final controller = GroupController();
-  List<GroupMedicion> mediciones = [];
+  List<GroupMedicion> medicionesGrupo = [];
+  List<Medicion> mediciones = [];
   double consumoActual = 0.0;
   double consumoTotal = 0.0;
   double voltajeTotal = 0.0;
@@ -43,10 +45,10 @@ class _HomeGroupSchemeState extends State<HomeGroupScheme> {
   }
 
   void initData() async {
-    mediciones =
+    medicionesGrupo =
         await controller.getGroupMedicion(widget.token, widget.groupDetails.id);
-    if (mediciones.isNotEmpty) {
-      consumoTotal = mediciones
+    if (medicionesGrupo.isNotEmpty) {
+      consumoTotal = medicionesGrupo
           .expand((item) => item.mediciones)
           .where((medicion) => medicion.watts != null)
           .map((medicion) => medicion.watts!)
@@ -57,46 +59,46 @@ class _HomeGroupSchemeState extends State<HomeGroupScheme> {
 
     consumoActual = widget.groupDetails.acumuladoWattsTotal ?? 0;
 
-     if (mediciones.isNotEmpty) {
-  List<DateTime?> fechas = mediciones
-      .expand((item) => item.mediciones)
-      .map((medicion) => medicion.fechaMedicion)
-      .where((fecha) => fecha != null)
-      .cast<DateTime>() // Necesario para que Dart entienda que no hay elementos nulos
-      .toList();
+    if (medicionesGrupo.isNotEmpty) {
+      List<DateTime?> fechas = medicionesGrupo
+          .expand((item) => item.mediciones)
+          .map((medicion) => medicion.fechaMedicion)
+          .where((fecha) => fecha != null)
+          .cast<
+              DateTime>() // Necesario para que Dart entienda que no hay elementos nulos
+          .toList();
 
-  if (fechas.isNotEmpty) {
-    fechaMedicion = fechas.reduce((a, b) => a!.isAfter(b!) ? a : b)!.toIso8601String();
-  } else {
-    fechaMedicion = "";
-  }
-} else {
-  fechaMedicion = "";
-}
+      if (fechas.isNotEmpty) {
+        fechaMedicion =
+            fechas.reduce((a, b) => a!.isAfter(b!) ? a : b)!.toIso8601String();
+      } else {
+        fechaMedicion = "";
+      }
+    } else {
+      fechaMedicion = "";
+    }
 
-    for (var item in mediciones) {
-      List<dynamic> medicionesList = item.mediciones;
+    for (var item in medicionesGrupo) {
+      mediciones = item.mediciones;
 
-      if (medicionesList.isNotEmpty) {
-        medicionesList
-            .sort((a, b) => b.fechaMedicion.compareTo(a.fechaMedicion));
-        voltajeTotal += medicionesList[0].voltaje ?? 0;
+      if (mediciones.isNotEmpty) {
+        mediciones.sort((a, b) => b.fechaMedicion!.compareTo(a.fechaMedicion!));
+        voltajeTotal += mediciones[0].voltaje ?? 0;
       }
     }
-    for (var item in mediciones) {
-      List<dynamic> medicionesList = item.mediciones;
+    for (var item in medicionesGrupo) {
+      mediciones = item.mediciones;
 
-      if (medicionesList.isNotEmpty) {
-        medicionesList
-            .sort((a, b) => b.fechaMedicion.compareTo(a.fechaMedicion));
+      if (mediciones.isNotEmpty) {
+        mediciones.sort((a, b) => b.fechaMedicion!.compareTo(a.fechaMedicion!));
         amperajeTotal +=
-            medicionesList[0].amperaje ?? 0.0; // Usa 0.0 si amperaje es nulo
+            mediciones[0].amperaje ?? 0.0; // Usa 0.0 si amperaje es nulo
       }
-    } 
+    }
     setState(() {
       loading = false;
     });
-    print(mediciones);
+    print(medicionesGrupo);
   }
 
   streamListener() {
@@ -104,10 +106,10 @@ class _HomeGroupSchemeState extends State<HomeGroupScheme> {
       final data = jsonDecode(message);
       Medicion medicion =
           Medicion.fromJson(data["data"] as Map<String, dynamic>);
-      for (var i = 0; i < mediciones.length; i++) {
-        if (mediciones[i].device.direccionMac == medicion.direccionMac) {
+      for (var i = 0; i < medicionesGrupo.length; i++) {
+        if (medicionesGrupo[i].device.direccionMac == medicion.direccionMac) {
           setState(() {
-            mediciones[i].mediciones.insert(0, medicion);
+            medicionesGrupo[i].mediciones.insert(0, medicion);
             consumoActual = consumoActual + medicion.watts;
             consumoTotal = consumoTotal + medicion.watts;
           });
@@ -147,23 +149,57 @@ class _HomeGroupSchemeState extends State<HomeGroupScheme> {
                   height: 20,
                 ),
                 Text(
-                  "Consumo",
+                  "Información",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                ConsumoGrupoCard(
-                  amperaje: amperajeTotal,
-                  voltaje: voltajeTotal,
-                  wattsAcumulado: consumoActual,
-                  fecha: fechaMedicion,
+                Divider(),
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Consumo",
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                      ConsumoGrupoCard(
+                        amperaje: amperajeTotal,
+                        voltaje: voltajeTotal,
+                        wattsAcumulado: consumoActual,
+                        fecha: fechaMedicion,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Resumen del Grupo",
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                      ResumenCard(groupDetails: widget.groupDetails),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Text(
-                  "Resumen del Grupo",
+                  "Graficos",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                ResumenCard(groupDetails: widget.groupDetails),
+                Divider(),
+                if (mediciones.isNotEmpty && mediciones != null)
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Consumo en Tiempo Real"),
+                        ChartMedicionTiempoReal(mediciones: mediciones)
+                      ],
+                    ),
+                  )
+                else
+                  Text("No hay Mediciones"),
                 SizedBox(
                   height: 20,
                 ),
@@ -171,24 +207,34 @@ class _HomeGroupSchemeState extends State<HomeGroupScheme> {
                   "Historial de Consumo",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Text.rich(TextSpan(
-                    text: "Total Watts: ",
-                    style: Theme.of(context).textTheme.labelMedium,
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextSpan(
-                          text: "${consumoTotal}W",
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge!
-                              .copyWith(color: Colors.amber))
-                    ])),
-                SizedBox(
-                  height: 10,
+                      Text.rich(TextSpan(
+                          text: "Total Watts: ",
+                          style: Theme.of(context).textTheme.labelMedium,
+                          children: [
+                            TextSpan(
+                                text:
+                                    "${(consumoTotal / 1000).toStringAsFixed(3)}kW",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .copyWith(color: Colors.amber)),
+                          ])),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      HistorialConsumoGrupo(
+                        mediciones: medicionesGrupo,
+                        devices: widget.groupDetails.dispositivos,
+                      )
+                    ],
+                  ),
                 ),
-                HistorialConsumoGrupo(
-                  mediciones: mediciones,
-                  devices: widget.groupDetails.dispositivos,
-                )
               ],
             ),
           )

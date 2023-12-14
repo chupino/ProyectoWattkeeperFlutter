@@ -16,28 +16,41 @@ class ResumenCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.admin_panel_settings,
-                size: 40,
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              expandedCrossAxisAlignment: CrossAxisAlignment.start,
+              expandedAlignment: Alignment.centerLeft,
+              childrenPadding: EdgeInsets.only(left: 20),
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.admin_panel_settings,
+                    size: 40,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text("Creador del Grupo",
+                      style: Theme.of(context).textTheme.labelLarge),
+                ],
               ),
-              Text("Creador del Grupo:",
-                  style: Theme.of(context).textTheme.bodyMedium),
-            ],
-          ),
-          Text(
-              "${groupDetails.creador.nombres} ${groupDetails.creador.apellidos}",
-              style: Theme.of(context)
-                  .textTheme
-                  .labelLarge!
-                  .copyWith(fontWeight: FontWeight.normal)),
-          Text(
-            groupDetails.creador.email,
-            style: Theme.of(context)
-                .textTheme
-                .labelLarge!
-                .copyWith(fontWeight: FontWeight.normal),
+              children: [
+                Text(
+                    "${groupDetails.creador.nombres} ${groupDetails.creador.apellidos}",
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelMedium!
+                        .copyWith(fontWeight: FontWeight.normal)),
+                Text(
+                  groupDetails.creador.email,
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelMedium!
+                      .copyWith(fontWeight: FontWeight.normal),
+                ),
+              ],
+            ),
           ),
           const SizedBox(
             height: 5,
@@ -49,48 +62,76 @@ class ResumenCard extends StatelessWidget {
           groupDetails.ahorroEnabled
               ? Column(
                   children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.health_and_safety,
-                          color: Colors.green,
+                    Theme(
+                      data: Theme.of(context)
+                          .copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                        expandedAlignment: Alignment.centerLeft,
+                        childrenPadding: EdgeInsets.only(left: 20),
+                        title: Row(
+                          children: [
+                            const Icon(
+                              Icons.health_and_safety,
+                              color: Colors.green,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Plan de Ahorro",
+                              style: Theme.of(context).textTheme.labelLarge,
+                            )
+                          ],
                         ),
-                        Text(
-                          "Plan de Ahorro Habilitado",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        )
-                      ],
+                        children: [
+                          Text(
+                            "Este grupo tiene habilidado un plan de ahorro, lo cual significa que se estara supervisando su consumo",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(fontWeight: FontWeight.normal),
+                          )
+                        ],
+                      ),
                     ),
-                    Text(
-                      "Este grupo tiene habilidado un plan de ahorro, lo cual significa que se estara supervisando su consumo",
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(fontWeight: FontWeight.normal),
-                    )
                   ],
                 )
               : Column(
                   children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.health_and_safety,
-                          color: Colors.red,
+                    Theme(
+                      data: Theme.of(context)
+                          .copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                        expandedAlignment: Alignment.centerLeft,
+                        childrenPadding: EdgeInsets.only(left: 20),
+                        title: Row(
+                          children: [
+                            const Icon(
+                              Icons.health_and_safety,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Plan de Ahorro",
+                              style: Theme.of(context).textTheme.labelLarge,
+                            )
+                          ],
                         ),
-                        Text(
-                          "Plan de Ahorro Deshabilitado",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        )
-                      ],
+                        children: [
+                          Text(
+                            "Este grupo no tiene habilidado un plan de ahorro",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(fontWeight: FontWeight.normal),
+                          )
+                        ],
+                      ),
                     ),
-                    Text(
-                      "Este grupo no tiene habilidado un plan de ahorro",
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(fontWeight: FontWeight.normal),
-                    )
                   ],
                 ),
           const SizedBox(
@@ -102,49 +143,78 @@ class ResumenCard extends StatelessWidget {
           ),
           groupDetails.recompensas.isNotEmpty
               ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.card_giftcard,
-                          color: Colors.green,
-                        ),
-                        Text(
-                          "Recompensas",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        )
-                      ],
+                    Theme(
+                      data: Theme.of(context)
+                          .copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                          expandedAlignment: Alignment.centerLeft,
+                          childrenPadding: EdgeInsets.only(left: 20),
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.card_giftcard,
+                                color: Colors.green,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Recompensas",
+                                style: Theme.of(context).textTheme.labelLarge,
+                              )
+                            ],
+                          ),
+                          children: [
+                            Text(
+                              "Este grupo tiene habilitadas las recompensas, ahorre para conseguirlas todas!",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(fontWeight: FontWeight.normal),
+                            )
+                          ]),
                     ),
-                    Text(
-                      "Este grupo tiene habilidadas las recompensas, ahorre para conseguirlas todas!",
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(fontWeight: FontWeight.normal),
-                    )
                   ],
                 )
               : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.card_giftcard,
-                          color: Colors.red,
+                    Theme(
+                      data: Theme.of(context)
+                          .copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                        expandedAlignment: Alignment.centerLeft,
+                        childrenPadding: EdgeInsets.only(left: 20),
+                        title: Row(
+                          children: [
+                            const Icon(
+                              Icons.card_giftcard,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Recompensas desactivadas",
+                              style: Theme.of(context).textTheme.labelLarge,
+                            )
+                          ],
                         ),
-                        Text(
-                          "Recompensas desactivadas",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        )
-                      ],
+                        children: [
+                          Text(
+                            "Este grupo no tiene habilitado las recompensas",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(fontWeight: FontWeight.normal),
+                          )
+                        ],
+                      ),
                     ),
-                    Text(
-                      "Este grupo no tiene habilitado las recompensas",
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(fontWeight: FontWeight.normal),
-                    )
                   ],
                 )
         ],

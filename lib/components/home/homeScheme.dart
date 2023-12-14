@@ -45,15 +45,23 @@ class _HomeSchemeState extends State<HomeScheme> {
       loading = true;
     });
     try {
-      await Future.delayed(Duration(seconds: 10), () async {
-        user = await userController.getDataUser(widget.token);
-        consejo = await userController.getConsejo(widget.token);
-        grupos = await groupController.getGroupsUser(
-            widget.token, "Grupos Afiliados");
-        deviceExpensive =
-            await deviceController.getDeviceMostExpensive(widget.token);
-        devices = await deviceController.getDevicesUser(widget.token);
-      });
+      await userController.getDataUser(widget.token).then((value) {
+        user = value;
+      }).timeout(Duration(seconds: 10));
+      await userController.getConsejo(widget.token).then((value) {
+        consejo = value;
+      }).timeout(Duration(seconds: 10));
+      await groupController
+          .getGroupsUser(widget.token, "Grupos Afiliados")
+          .then((value) {
+        grupos = value;
+      }).timeout(Duration(seconds: 10));
+      await deviceController.getDeviceMostExpensive(widget.token).then((value) {
+        deviceExpensive = value;
+      }).timeout(Duration(seconds: 10));
+      await deviceController.getDevicesUser(widget.token).then((value) {
+        devices = value;
+      }).timeout(Duration(seconds: 10));
 
       setState(() {
         isInitialize = true;

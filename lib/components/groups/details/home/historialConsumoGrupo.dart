@@ -54,12 +54,13 @@ class HistorialConsumoGrupo extends StatelessWidget {
                     size: 40,
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'C. Watts',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      Text("${medicion.watts}W",
+                      Text("${(medicion.watts).toStringAsFixed(3)}W",
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!
@@ -79,12 +80,13 @@ class HistorialConsumoGrupo extends StatelessWidget {
                     color: Colors.orange,
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'C. Amperaje',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      Text("${medicion.amperaje}W",
+                      Text("${(medicion.amperaje).toStringAsFixed(3)}A",
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!
@@ -104,12 +106,13 @@ class HistorialConsumoGrupo extends StatelessWidget {
                     color: Colors.redAccent,
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'C. Voltaje',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      Text("${medicion.voltaje}W",
+                      Text("${(medicion.voltaje).toStringAsFixed(3)}V",
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!
@@ -146,7 +149,7 @@ class HistorialConsumoGrupo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.network(
-                  device.getTamagochiImage(),
+                  device.getTamagochiDynamicImage(),
                   height: 40,
                 ),
                 SizedBox(

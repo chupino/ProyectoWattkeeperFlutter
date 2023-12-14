@@ -15,7 +15,8 @@ class FirstStepLinkDevice extends StatefulWidget {
 
 class _FirstStepLinkDeviceState extends State<FirstStepLinkDevice> {
   bool isDone = true;
-  String resultado = "9E:45:AB:56:CF:B2-wattkeeper";
+  //wattkeeper oficial mac: 94:E6:86:3C:C2:AC-wattkeeper
+  String resultado = "94:E6:86:3C:C1:AC-wattkeeper";
   @override
   Widget build(BuildContext context) {
     return !isDone

@@ -97,6 +97,20 @@ class RegisterPage extends StatelessWidget {
                           icon: Icons.date_range,
                           readOnly: false,
                           textInputType: TextInputType.datetime,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Ingresa una fecha correcta";
+                            }
+                            DateTime fechaIngresada = DateTime.parse(value);
+                            DateTime ahora = DateTime.now();
+                            // Elimina la hora de la fecha actual para comparar solo las fechas
+                            ahora =
+                                DateTime(ahora.year, ahora.month, ahora.day);
+                            if (!fechaIngresada.isBefore(ahora)) {
+                              return "La fecha debe ser anterior a la fecha actual";
+                            }
+                            return null;
+                          },
                           controller: fecNacController),
                       const SizedBox(
                         height: 10,

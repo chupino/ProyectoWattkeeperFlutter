@@ -15,35 +15,26 @@ class DeviceDetailsExpandedHeader extends StatelessWidget {
         scale: 1.0 - (shrinkOffset / 200),
         child: Padding(
           padding: const EdgeInsets.all(32.0),
-          child: Stack(
-            children: [
-              Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      device.nombre,
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(color: Colors.white),
-                    ),
-                    Flexible(
-                        child: Image.network(device.getTamagochiDynamicImage(),
-                            height: 100))
-                  ],
-                ),
+          child: Center(
+            child: SingleChildScrollView(
+              // Agregado
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    device.nombre,
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium!
+                        .copyWith(color: Colors.white),
+                  ),
+                  Flexible(
+                      child: Image.network(device.getTamagochiDynamicImage(),
+                          height: 100))
+                ],
               ),
-              Positioned(
-                  top: 10,
-                  left: 10,
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.arrow_back_ios)))
-            ],
+            ),
           ),
         ),
       ),

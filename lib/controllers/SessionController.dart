@@ -8,6 +8,71 @@ import 'package:wattkeeperr/models/Consejo.dart';
 import 'package:wattkeeperr/models/User.dart';
 
 class SessionController {
+  Future<bool> updatePassword(String token, String oldPassword, String newPassword, String newPasswordConfirmation) async {
+    try {
+      final String url = "${Urls.backendDjango}/api/user/password";
+      final response = await http.put(Uri.parse(url), headers: {
+        "Authorization": "token $token"
+      }, body: {
+        "password": oldPassword,
+        "new_password": newPassword,
+        "new_password_confirmation": newPasswordConfirmation,
+      });
+      if (response.statusCode == 204) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+  Future<bool> updateDataUser(String token, String nombre, String apellido,
+      String fechaNac, String email) async {
+    try {
+      final String url = "${Urls.backendDjango}/api/user";
+      final response = await http.put(Uri.parse(url), headers: {
+        "Authorization": "token $token"
+      }, body: {
+        "nombres": nombre,
+        "apellidos": apellido,
+        "email": email,
+        "fecha_nacimiento": fechaNac
+      });
+      if (response.statusCode == 204) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<bool> updateConfiguration(String token, bool groupAlerts,
+      bool deviceAlerts, bool redeemAlerts) async {
+    try {
+      final String url = "${Urls.backendDjango}/api/user/config";
+      final response = await http.put(Uri.parse(url), headers: {
+        "Authorization": "token $token"
+      }, body: {
+        "alerta_limite_grupo": groupAlerts.toString(),
+        "alerta_limite_dispositivo": deviceAlerts.toString(),
+        "alerta_recompensa": redeemAlerts.toString()
+      });
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      throw e.toString();
+    }
+  }
+
   Future<bool> login(String email, String password) async {
     try {
       print("email: $email, password: $password");

@@ -20,6 +20,7 @@ class ChartConsumoDiario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(mediciones);
     double maxTotalWatts = mediciones.fold(
       0.0,
       (max, medicion) => medicion.consumo > max ? medicion.consumo : max,
@@ -38,7 +39,7 @@ class ChartConsumoDiario extends StatelessWidget {
             minX: 0,
             maxX: (mediciones.length - 1).toDouble(),
             minY: 0,
-            maxY: maxY,
+            maxY: 12,
             titlesData: FlTitlesData(
               bottomTitles: AxisTitles(
                 sideTitles: SideTitles(

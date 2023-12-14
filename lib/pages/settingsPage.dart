@@ -4,6 +4,7 @@ import 'package:wattkeeperr/components/settings/switchCustom.dart';
 import 'package:wattkeeperr/components/settings/tileCustom.dart';
 import 'package:wattkeeperr/controllers/ThemeController.dart';
 import 'package:wattkeeperr/pages/accountPage.dart';
+import 'package:wattkeeperr/pages/notificationSettingsPage.dart';
 import 'package:wattkeeperr/providers/ThemeProvider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -53,6 +54,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AccountPage(token: widget.token)));
+            },
+          ),
+          Divider(),
+          TileCustom(
+            icon: Icons.notifications,
+            title: "Notificaciones",
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationSettingsPage(token: widget.token)));
             },
           ),
           

@@ -8,6 +8,9 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+        style: ButtonStyle(
+          padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 20)),
+        ),
         onPressed: onPressed,
         child: Text(
           text,

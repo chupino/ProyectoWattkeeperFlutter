@@ -7,7 +7,7 @@ class DatePickerTextField extends StatefulWidget {
   final IconData? icon;
   final TextInputType textInputType;
   final TextEditingController? controller;
-  final String Function(String?)? validator;
+  final String? Function(String?)? validator;
   final bool? readOnly;
   const DatePickerTextField(
       {super.key,

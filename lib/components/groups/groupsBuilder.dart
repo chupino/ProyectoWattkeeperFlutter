@@ -31,10 +31,11 @@ class _GroupsBuilderState extends State<GroupsBuilder> {
       loadingError = false;
     });
     try {
-      await Future.delayed(Duration(seconds: 10), () async {
-        misGrupos =
-            await controller.getGroupsUser(widget.token, widget.selectedGroup);
-      });
+      await controller
+          .getGroupsUser(widget.token, widget.selectedGroup)
+          .then((value) {
+        misGrupos = value;
+      }).timeout(Duration(seconds: 10));
       setState(() {
         isInitialize = true;
         loadingError = false;
@@ -69,7 +70,8 @@ class _GroupsBuilderState extends State<GroupsBuilder> {
         : loadingError
             ? ErrorScreen(reload: handleRefresh)
             : isInitialize
-                ? (misGrupos.isNotEmpty
+                ? 
+                (misGrupos.isNotEmpty
                     ? Column(
                         children: misGrupos
                             .map(

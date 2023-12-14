@@ -31,9 +31,9 @@ class _DevicesBuilderState extends State<DevicesBuilder> {
       loadingError = false;
     });
     try {
-      await Future.delayed(Duration(seconds: 10), () async {
-        dispositivos = await controller.getDevicesUser(widget.token);
-      });
+      await controller.getDevicesUser(widget.token).then((value) {
+        dispositivos = value;
+      }).timeout(Duration(seconds: 10));
       setState(() {
         isInitialize = true;
         loadingError = false;
@@ -62,33 +62,34 @@ class _DevicesBuilderState extends State<DevicesBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return loading 
-      ? LoadingAnimation()
-      : loadingError
-        ? ErrorScreen(reload: handleRefresh)
-        : isInitialize 
-          ? (dispositivos.isNotEmpty 
-              ? 
-              
-              GridView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, crossAxisSpacing: 8.0, mainAxisSpacing: 8.0),
-            itemCount: dispositivos.length,
-            itemBuilder: (context, index) {
-               return DeviceCard(
-                          device: dispositivos[index],
-                          token: widget.token,
-                          reload: handleRefresh,
-                        );
-            })
-               : NonDevices(
-            message: "No hay dispositivos vinculados a esta cuenta",
-            token: widget.token,
-          )
-              ) : LoadingAnimation();
-   /*  List<Widget> dispositivosWidget = dispositivos
+    return loading
+        ? LoadingAnimation()
+        : loadingError
+            ? ErrorScreen(reload: handleRefresh)
+            : isInitialize
+                ? (dispositivos.isNotEmpty
+                    ? GridView.builder(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 8.0,
+                                mainAxisSpacing: 8.0),
+                        itemCount: dispositivos.length,
+                        itemBuilder: (context, index) {
+                          return DeviceCard(
+                            device: dispositivos[index],
+                            token: widget.token,
+                            reload: handleRefresh,
+                          );
+                        })
+                    : NonDevices(
+                        message: "No hay dispositivos vinculados a esta cuenta",
+                        token: widget.token,
+                      ))
+                : LoadingAnimation();
+    /*  List<Widget> dispositivosWidget = dispositivos
         .map((e) => DeviceCard(
               device: e,
               token: widget.token,

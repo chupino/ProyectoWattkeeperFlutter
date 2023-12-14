@@ -69,6 +69,7 @@ class HistorialConsumoDispositivo extends StatelessWidget {
                     size: 40,
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'C. Watts',
@@ -94,6 +95,7 @@ class HistorialConsumoDispositivo extends StatelessWidget {
                     color: Colors.orange,
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'C. Amperaje',
@@ -119,6 +121,7 @@ class HistorialConsumoDispositivo extends StatelessWidget {
                     color: Colors.redAccent,
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'C. Voltaje',

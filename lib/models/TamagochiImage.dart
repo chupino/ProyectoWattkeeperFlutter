@@ -6,8 +6,10 @@ class TamagochiImage {
   const TamagochiImage({required this.url, required this.label});
 
   String getTamagochiImage() {
-    return "${Urls.backendDjango}/media$url";
+    String tamagochiSinPng = url.replaceAll(".png", "");
+    return "${Urls.backendDjango}/media${tamagochiSinPng}_1.png";
   }
+
 
   factory TamagochiImage.fromJson(Map<String, dynamic> data) {
     return TamagochiImage(url: data["url"], label: data["label"]);

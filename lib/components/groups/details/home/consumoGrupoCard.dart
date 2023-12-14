@@ -85,7 +85,7 @@ class ConsumoGrupoCard extends StatelessWidget {
           ),
           Text('Consumo Periodico Total'),
           Text(
-            "${wattsAcumulado / 1000}kW",
+            "${(wattsAcumulado / 1000).toStringAsFixed(3)}kW",
             style: Theme.of(context)
                 .textTheme
                 .headlineMedium!
@@ -96,7 +96,7 @@ class ConsumoGrupoCard extends StatelessWidget {
           ),
           Text('Ultimo Voltaje'),
           Text(
-            "${voltaje}V",
+            "${(voltaje).toStringAsFixed(3)}V",
             style: Theme.of(context)
                 .textTheme
                 .headlineMedium!
@@ -107,7 +107,7 @@ class ConsumoGrupoCard extends StatelessWidget {
           ),
           Text('Ultimo Amperaje'),
           Text(
-            "${amperaje}A",
+            "${(amperaje).toStringAsFixed(3)}A",
             style: Theme.of(context)
                 .textTheme
                 .headlineMedium!
